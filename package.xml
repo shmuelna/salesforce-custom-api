@@ -4,6 +4,7 @@
         <members>GLOBAL_DAL</members>
         <members>GLOBAL_HttpRequests</members>
         <members>GLOBAL_RestClient</members>
+        <members>GLOBAL_WS_ContentDocument</members>
         <members>GLOBAL_WS_Interface</members>
         <members>GLOBAL_WS_Login</members>
         <members>GLOBAL_WS_ParentService</members>
