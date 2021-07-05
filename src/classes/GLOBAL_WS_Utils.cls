@@ -32,46 +32,14 @@ public class GLOBAL_WS_Utils {
         if (serviceName == 'picklist'){
             return new GLOBAL_WS_Picklist(request, response, objectExtId);
         }
-        /*
-        else if(serviceName == 'organizations'){
-            if (relatedList == 'users'){
-                return new GSTAR_WS_MalkarAdminUser(request, response, objectExtId);
-            }
-            else if( relatedList =='malkarPeople'){
-                return new GSTAR_WS_MalkarAdminContact(request, response, objectExtId);
-            }
-            else if (relatedList == 'reports'){
-                return new GSTAR_WS_MalkarReports(request, response, objectExtId);
-            }
-            else if (relatedList == 'branches'){
-                return new GSTAR_WS_MalkarBranch(request, response, objectExtId);
+        else if(serviceName == 'accounts'){
+            if (relatedList == 'contacts'){
+                return new WS_Contact(request, response, objectExtId);
             }
             else{
-                return new GSTAR_WS_Malkar(request, response, objectExtId);
+                return new WS_Account(request, response,objectExtId);
             }
         }
-        else if (serviceName == 'contacts'){
-            return new GLOBAL_WS_Contact(request,response, objectExtId);
-        }
-        else if (serviceName == 'organizationUsers'){
-            return new GSTAR_WS_MalkarAdminUser(request,response, objectExtId);
-        }
-        else if (serviceName == 'organizationMalkarPeople'){
-            return new GSTAR_WS_MalkarAdminContact(request,response, objectExtId);
-        }
-        else if (serviceName == 'organizationReports'){
-            return new GSTAR_WS_MalkarReports(request,response, objectExtId);
-        }
-        else if (serviceName == 'organizationBranches'){
-            return new GSTAR_WS_MalkarBranch(request,response, objectExtId);
-        }
-        else if (serviceName == 'jointSupportRequests'){
-            return new GSTAR_WS_JointSupportRequest(request,response, objectExtId);
-        }
-        else if (serviceName == 'koronaSupportRequests'){
-            return new GSTAR_WS_KoronaSupportRequest(request,response, objectExtId);
-        }
-        //*/
         else{
             return null;
         }
