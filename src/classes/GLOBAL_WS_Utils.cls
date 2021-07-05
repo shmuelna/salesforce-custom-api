@@ -99,8 +99,6 @@ public class GLOBAL_WS_Utils {
 	public static WrapperContentDocuments getContentDocuments(String sobjectIdField, List<sObject> objectList){
         
         Set<Id> relatedIds = new Set<Id>();
-        Map<Id, List<ContentDocumentLink>> contentDocumentLinksByObjectId;
-        Map<Id, ContentDocument> contentDocumentsBycontentDocumentId;
         WrapperContentDocuments wcd = new WrapperContentDocuments();
         
         if(objectList != null && !objectList.isEmpty()){
@@ -111,7 +109,7 @@ public class GLOBAL_WS_Utils {
         //Key: sobjectIdField.Id - Value: Related ContentDocumentLinks
         wcd.contentDocumentLinksByObjectId = getObjectFileLinkMap(relatedIds);
         Set<Id> docIds = new Set<Id>();
-        for (List<ContentDocumentLink> links : contentDocumentLinksByObjectId.values()){
+        for (List<ContentDocumentLink> links : wcd.contentDocumentLinksByObjectId.values()){
             for (ContentDocumentLink link : links){
                 docIds.add(link.ContentDocumentId);
             }
@@ -175,7 +173,7 @@ public class GLOBAL_WS_Utils {
                     tmpFile.put('fileType', doc.FileType);
                     tmpFile.put('fileExtension', doc.FileExtension);
                     if (doc.LatestPublishedVersion != null && doc.LatestPublishedVersion.CreatedDate != null){
-                        tmpFile.put('fileDate', doc.LatestPublishedVersion.CreatedDate.format());
+                        tmpFile.put('fileDate', doc.LatestPublishedVersion.CreatedDate);
                     }
                     tmpFile.put('downloadLink', documentApiUrl + doc.id);
                     fileList.add(tmpFile);
