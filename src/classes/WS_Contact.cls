@@ -13,6 +13,9 @@ public with sharing class WS_Contact extends GLOBAL_WS_ParentService{
     public override Map<String, String> getFieldsNames(){
     	Map<String, String> fieldsNames = new Map<String, String>();
     	fieldsNames.put('name', 'Name');
+        fieldsNames.put('contactId', 'Id');
+        fieldsNames.put('accountId', 'AccountId');
+        fieldsNames.put('accountName', 'Account.Name');
     	return fieldsNames;
     }
 

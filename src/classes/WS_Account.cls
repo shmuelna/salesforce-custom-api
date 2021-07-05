@@ -13,11 +13,16 @@ public with sharing class WS_Account extends GLOBAL_WS_ParentService{
     public override Map<String, String> getFieldsNames(){
     	Map<String, String> fieldsNames = new Map<String, String>();
     	fieldsNames.put('name', 'Name');
+    	fieldsNames.put('accountId', 'Id');
     	return fieldsNames;
     }
 
     public override String getConditionClause(){
     	String filter = '';
+        if(String.isNotBlank(this.objectExtId)){
+    		String extId = this.objectExtId;
+    		filter += ' AND Id = \'' + this.objectExtId + '\' ';
+    	}
         return filter;
     }
 
