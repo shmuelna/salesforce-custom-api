@@ -1,5 +1,7 @@
 public class GLOBAL_WS_Utils {
 
+	public static final String documentApiUrl = '/services/apexrest/api/contentDocument/';
+    
     public static void addWSLog(String url, String params, String body, String response){
         addWSLog(url, params, body, response, null);
     }
@@ -92,5 +94,97 @@ public class GLOBAL_WS_Utils {
 			}
     	}
 		return value;
+    }
+
+	public static WrapperContentDocuments getContentDocuments(String sobjectIdField, List<sObject> objectList){
+        
+        Set<Id> relatedIds = new Set<Id>();
+        Map<Id, List<ContentDocumentLink>> contentDocumentLinksByObjectId;
+        Map<Id, ContentDocument> contentDocumentsBycontentDocumentId;
+        WrapperContentDocuments wcd = new WrapperContentDocuments();
+        
+        if(objectList != null && !objectList.isEmpty()){
+        	for(sObject obj : objectList){
+                relatedIds.add((String)obj.get(sobjectIdField));
+            }
+        }
+        //Key: sobjectIdField.Id - Value: Related ContentDocumentLinks
+        wcd.contentDocumentLinksByObjectId = getObjectFileLinkMap(relatedIds);
+        Set<Id> docIds = new Set<Id>();
+        for (List<ContentDocumentLink> links : contentDocumentLinksByObjectId.values()){
+            for (ContentDocumentLink link : links){
+                docIds.add(link.ContentDocumentId);
+            }
+        }
+        //Key: ContentDocument.Id. Value: ContentDocument
+        wcd.contentDocumentsBycontentDocumentId = new Map<Id, ContentDocument>(getContentDocumentsById(docIds));
+        
+        return wcd;
+    }
+    
+    public static Map<Id, List<ContentDocumentLink>> getObjectFileLinkMap(Set<Id> objIds){
+        Map<Id, List<ContentDocumentLink>> objMap = new Map<Id, List<ContentDocumentLink>>();
+        List<ContentDocumentLink> links = [SELECT Id, ContentDocumentId, LinkedEntityId, ContentDocument.FileExtension FROM ContentDocumentLink WHERE LinkedEntityId IN :objIds];
+        for (ContentDocumentLink cdl : links){
+            List<ContentDocumentLink> cdls = objMap.get(cdl.LinkedEntityId);
+            if (cdls == null){
+                objMap.put(cdl.LinkedEntityId, new List<ContentDocumentLink>());
+            }
+            objMap.get(cdl.LinkedEntityId).add(cdl);
+        }
+        return objMap;
+    }
+    
+    public static List<ContentDocument> getContentDocumentsById(Set<Id> docIds){
+        return getContentDocumentsById(docIds, null);
+    }
+
+	public static List<ContentDocument> getContentDocumentsById(Set<Id> docIds, String additionalFields){
+        String queryStr = 'SELECT Id, Description, Title, FileType, FileExtension, LatestPublishedVersionId, LatestPublishedVersion.CreatedDate, ';
+        queryStr += ' LatestPublishedVersion.Status__c ';
+        if (String.isNotBlank(additionalFIelds)){
+            queryStr += additionalFields;
+        }
+		queryStr += ' FROM ContentDocument ';
+		queryStr += ' WHERE Id IN :docIds';
+		return Database.query(queryStr);
+	}
+	
+    public class WrapperContentDocuments{
+        Map<Id, List<ContentDocumentLink>> contentDocumentLinksByObjectId {get;set;}
+        Map<Id, ContentDocument> contentDocumentsBycontentDocumentId {get;set;}
+    }
+    
+    public static void addFilesToJsonObject(String sobjectIdField, WrapperContentDocuments wcd, Map<String, Object> myMap, sObject obj){
+        try{
+            List<ContentDocument> contentDocuments = new List<ContentDocument>();
+            List<ContentDocumentLink> cdls = wcd.contentDocumentLinksByObjectId.get((String)obj.get(sobjectIdField));
+            if (cdls != null){
+                for (ContentDocumentLink cdl : cdls){
+                    ContentDocument tmp = wcd.contentDocumentsBycontentDocumentId.get(cdl.ContentDocumentId);
+                    if(tmp != null){
+                    	contentDocuments.add(tmp);   
+                    }
+                }
+            }
+            if (contentDocuments != null && contentDocuments.size() > 0){
+                List<Object> fileList = new List<Object>();
+                for (ContentDocument doc : contentDocuments){
+                    Map<String, String> tmpFile = new Map<String, String>();
+                    tmpFile.put('title', doc.Title);
+                    tmpFile.put('fileType', doc.FileType);
+                    tmpFile.put('fileExtension', doc.FileExtension);
+                    if (doc.LatestPublishedVersion != null && doc.LatestPublishedVersion.CreatedDate != null){
+                        tmpFile.put('fileDate', doc.LatestPublishedVersion.CreatedDate.format());
+                    }
+                    tmpFile.put('downloadLink', documentApiUrl + doc.id);
+                    fileList.add(tmpFile);
+                }
+                myMap.put('files', fileList);
+            }
+        }
+        catch(Exception e){
+            system.debug('**ERROR**' + e);
+        }
     }
 }

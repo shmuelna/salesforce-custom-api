@@ -1,6 +1,7 @@
 public with sharing class WS_Account extends GLOBAL_WS_ParentService{
 
 	public static final String SOBJECT_NAME = 'Account';
+	GLOBAL_WS_Utils.WrapperContentDocuments wcd;
 
 	public WS_Account(RestRequest request, RestResponse response, String objectExtId){
 		super(request,response, WS_Account.class.getName(), objectExtId);
@@ -27,6 +28,7 @@ public with sharing class WS_Account extends GLOBAL_WS_ParentService{
     }
 
     public override Object getJSONObjectList(List<sObject> objectList){
+		wcd = GLOBAL_WS_Utils.getContentDocuments('Id', objectList);
         return super.getJSONObjectList(objectList);
     }
     
@@ -36,6 +38,9 @@ public with sharing class WS_Account extends GLOBAL_WS_ParentService{
     }
     
     public Map<String, Object> editObjectBeforeSending(Map<String, Object> myMap, sObject obj){
+		//files
+		GLOBAL_WS_Utils.addFilesToJsonObject('Id', wcd, myMap, obj);
+		
     	if(myMap != null){
     		myMap.put('nameExample', ((String)obj.get('Name')).substring(0,3));
     	}
