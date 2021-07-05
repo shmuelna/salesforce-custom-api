@@ -107,7 +107,7 @@ public class GLOBAL_WS_Utils {
             }
         }
         //Key: sobjectIdField.Id - Value: Related ContentDocumentLinks
-        wcd.contentDocumentLinksByObjectId = getObjectFileLinkMap(relatedIds);
+        wcd.contentDocumentLinksByObjectId = !relatedIds.isEmpty() ? getObjectFileLinkMap(relatedIds) : new Map<Id, List<ContentDocumentLink>>();
         Set<Id> docIds = new Set<Id>();
         for (List<ContentDocumentLink> links : wcd.contentDocumentLinksByObjectId.values()){
             for (ContentDocumentLink link : links){
@@ -115,7 +115,7 @@ public class GLOBAL_WS_Utils {
             }
         }
         //Key: ContentDocument.Id. Value: ContentDocument
-        wcd.contentDocumentsBycontentDocumentId = new Map<Id, ContentDocument>(getContentDocumentsById(docIds));
+        wcd.contentDocumentsBycontentDocumentId = !docIds.isEmpty() ? new Map<Id, ContentDocument>(getContentDocumentsById(docIds)) : new Map<Id, ContentDocument>();
         
         return wcd;
     }
