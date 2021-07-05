@@ -283,7 +283,7 @@ public with sharing abstract class GLOBAL_WS_ParentService extends GLOBAL_RestCl
 	    	system.debug(this.objectExtId);
 	    	if(String.isBlank(this.objectExtId) || this.isRelatedList){
 	    		List<sObject> lst = this.getRecords();
-	    		String nextPageUrl = request.requestURI;
+	    		String nextPageUrl = '/services/apexrest/' + request.requestURI;
 	    		map<String, object> newParams = new map<String, object>();
 	    		newParams.putAll(request.params);
 		        if(!lst.isEmpty()){
