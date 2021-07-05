@@ -36,6 +36,12 @@ public with sharing class WS_Account extends GLOBAL_WS_ParentService{
     	Map<String, Object> myMap = super.getJSONObject(obj);
         return editObjectBeforeSending(myMap, obj);
     }
+
+	public override Map<String, Object> getFullJSONObject(sObject obj){
+        wcd = GLOBAL_WS_Utils.getContentDocuments('Id', new List<sObject>{obj});
+    	Map<String, Object> myMap = super.getFullJSONObject(obj);
+        return editObjectBeforeSending(myMap, obj);
+    }
     
     public Map<String, Object> editObjectBeforeSending(Map<String, Object> myMap, sObject obj){
 		//files
