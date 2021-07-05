@@ -1,0 +1,28 @@
+<project name="Sample usage of Salesforce Ant tasks" default="retrieve" basedir="." xmlns:sf="antlib:com.salesforce">
+
+    <property file="build.properties"/>
+    <property environment="env"/>
+
+    <target name="retrieve">
+	  <delete dir="src"/>
+      <mkdir dir="src"/>
+     <sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}" unpackaged="package.xml" retrieveTarget="src"/>
+    </target>
+
+	<target name="deploy">
+      <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}"
+          deployRoot="src" />
+    </target>
+
+
+	<!-- list all layouts in org -->
+	<target name="describeLayouts">
+		<sf:listMetadata username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" metadataType="Layout" resultFilePath="layout.log" />
+	</target>
+
+	<!-- list all metadata components -->
+	<target name="describeMetadata">
+		<sf:describeMetadata username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" resultFilePath="describe.log"/>
+	</target>
+
+</project>

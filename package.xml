@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>GLOBAL_DAL</members>
+        <members>GLOBAL_HttpRequests</members>
+        <members>GLOBAL_RestClient</members>
+        <members>GLOBAL_WS_Interface</members>
+        <members>GLOBAL_WS_Login</members>
+        <members>GLOBAL_WS_ParentService</members>
+        <members>GLOBAL_WS_Picklist</members>
+        <members>GLOBAL_WS_RestServices</members>
+        <members>GLOBAL_WS_Utils</members>
+        <members>WS_Account</members>
+        <members>WS_Contact</members>
+        <name>ApexClass</name>
+    </types>
+    <version>52.0</version>
+</Package>
