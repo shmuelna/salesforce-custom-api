@@ -168,7 +168,7 @@ public class GLOBAL_WS_Utils {
             if (contentDocuments != null && contentDocuments.size() > 0){
                 List<Object> fileList = new List<Object>();
                 for (ContentDocument doc : contentDocuments){
-                    Map<String, String> tmpFile = new Map<String, String>();
+                    Map<String, object> tmpFile = new Map<String, object>();
                     tmpFile.put('title', doc.Title);
                     tmpFile.put('fileType', doc.FileType);
                     tmpFile.put('fileExtension', doc.FileExtension);
