@@ -288,12 +288,15 @@ public with sharing abstract class GLOBAL_WS_ParentService extends GLOBAL_RestCl
 	    		newParams.putAll(request.params);
 		        if(!lst.isEmpty()){
 		        	sObject lastObj = lst.get(lst.size() -1);	
+                    String apiFieldNameSorting = this.getAPIFieldNameSorting();
 		        	newParams.put(LASTID, EncodingUtil.base64Encode(Blob.valueOf((String)lastObj.get('Id'))));
+                    newParams.put(LAST_VALUE, lastObj.get(apiFieldNameSorting));
 		        }
 		        
 		        List<object> jsonLst = (List<object>) getJSONObjectList(lst);
 		        if(!jsonLst.isEmpty()){
-		        	newParams.put(LAST_VALUE, ((Map<String, Object>) jsonLst[jsonLst.size() - 1]).get(request.params.get(SORT_FIELDNAME)));
+		        	//this was an error to take from the json, LAST_VALUE assignement moved to the sobject - 2 lines above
+                    //newParams.put(LAST_VALUE, ((Map<String, Object>) jsonLst[jsonLst.size() - 1]).get(request.params.get(SORT_FIELDNAME)));
 		        }
 		        nextPageUrl += GLOBAL_HttpRequests.getParamsForURL(newParams);
 	        	response.addHeader('Link', '<' + nextPageUrl + '>; rel="next"');
