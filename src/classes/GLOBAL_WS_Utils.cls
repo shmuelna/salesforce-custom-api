@@ -12,15 +12,13 @@ public class GLOBAL_WS_Utils {
             return;
         }
         /*
-        API_Log__b wsLog = new API_Log__b();
+        API_Log__c wsLog = new API_Log__c();
         wsLog.Url__c = url;
         wsLog.Params__c = params;
         wsLog.Body__c = body;
         wsLog.Response__c = response;
         wsLog.ErrorMessage__c = errorMessage;
-        wsLog.User__c = UserInfo.getUserId();
-        wsLog.CreatedDate__c = DateTime.now();
-        Database.insertImmediate(wsLog);
+        Database.insert(wsLog);
         //*/
     } 
 
