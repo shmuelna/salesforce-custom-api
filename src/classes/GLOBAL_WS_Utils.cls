@@ -39,7 +39,7 @@ public class GLOBAL_WS_Utils {
                 return new WS_Contact(request, response, objectExtId);
             }
             else{
-                return new WS_Account(request, response,objectExtId);
+                return new WS_Account(request, response,objectExtId, true);
             }
         }
         else{
