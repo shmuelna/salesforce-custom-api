@@ -348,25 +348,43 @@ public with sharing abstract class GLOBAL_WS_ParentService extends GLOBAL_RestCl
     protected List<sObject> records;
     protected Set<Id> allIds;
     protected Set<Id> allIdsForThisPageIndex;
-    //protected CNT_WebServiceSync__c myWSSync;
     
+    GLOBAL_WS_Utils.WrapperContentDocuments wcd;
     public String className;
     public String objectExtId;
     public boolean isRelatedList;
+    public Boolean addFileUrlsToJSON;
+    public String apiNameOfFilesParent;
     public GLOBAL_WS_ParentService(RestRequest request, RestResponse response, String className) {
         super(request,response);
         this.className = className;
         setSobjectDetails();
+        this.addFileUrlsToJSON = false;
         this.showFullObject = request.params.get(FULL_OBJECT) != null ? Boolean.valueOf(request.params.get(FULL_OBJECT)) : false;
         //this._fieldsNames = this.getFieldsNames();
     }
     
     public GLOBAL_WS_ParentService(RestRequest request, RestResponse response, String className, String objectExtId) {
-        super(request,response);
+        super(request,response);        
+        setSobjectDetails();
+        init(className, objectExtId, false, null);
+    }
+    public GLOBAL_WS_ParentService(RestRequest request, RestResponse response, String className, String objectExtId, Boolean addFileUrlsToJSON) {
+        super(request,response);        
+        setSobjectDetails();
+        init(className, objectExtId, addFileUrlsToJSON, 'Id');
+    }    
+    public GLOBAL_WS_ParentService(RestRequest request, RestResponse response, String className, String objectExtId, Boolean addFileUrlsToJSON, String apiNameOfFilesParent) {
+        super(request,response);        
+        setSobjectDetails();
+        init(className, objectExtId, addFileUrlsToJSON, apiNameOfFilesParent);
+    }
+    
+    public void init(String className, String objectExtId, Boolean addFileUrlsToJSON, String apiNameOfFilesParent){
         this.className = className;
         this.objectExtId = objectExtId;
-        setSobjectDetails();
-        //this._fieldsNames = this.getFieldsNames();
+        this.addFileUrlsToJSON = addFileUrlsToJSON;
+        this.apiNameOfFilesParent = apiNameOfFilesParent;
         String relatedListName = GLOBAL_RestClient.getRelatedListName(request.requestURI);
         this.isRelatedList = String.isNotBlank(relatedListName);
         this.showFullObject = request.params.get(FULL_OBJECT) != null ? Boolean.valueOf(request.params.get(FULL_OBJECT)) : false;
@@ -396,6 +414,9 @@ public with sharing abstract class GLOBAL_WS_ParentService extends GLOBAL_RestCl
     }
     
     public virtual Map<String, Object> getFullJSONObject(sObject obj){
+        if(this.addFileUrlsToJSON){
+            wcd = GLOBAL_WS_Utils.getContentDocuments(this.apiNameOfFilesParent, new List<sObject>{obj});
+        }
         return this.getJSONObject(obj, this.getFullFieldsNames());
     }
     
@@ -455,10 +476,17 @@ public with sharing abstract class GLOBAL_WS_ParentService extends GLOBAL_RestCl
     			system.debug(apiName + ' is not accessible');
     		}
         }
+        if(this.addFileUrlsToJSON){
+            //files
+            GLOBAL_WS_Utils.addFilesToJsonObject(this.apiNameOfFilesParent, this.wcd, JSONObj, obj);
+        }
         return JSONObj;
     }
     
     public virtual Object getJSONObjectList(List<sObject> objectList){
+        if(this.addFileUrlsToJSON){
+            wcd = GLOBAL_WS_Utils.getContentDocuments(this.apiNameOfFilesParent, objectList);
+        }
         List<Map<String, Object>> lst = new List<Map<String, Object>>();
         if(objectList != null && !objectList.isEmpty()){
         	for(sObject obj : objectList){
