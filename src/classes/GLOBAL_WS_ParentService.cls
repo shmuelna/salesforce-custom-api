@@ -365,19 +365,19 @@ public with sharing abstract class GLOBAL_WS_ParentService extends GLOBAL_RestCl
     }
     
     public GLOBAL_WS_ParentService(RestRequest request, RestResponse response, String className, String objectExtId) {
-        super(request,response);        
-        setSobjectDetails();
+        super(request,response);
         init(className, objectExtId, false, null);
+	setSobjectDetails();
     }
     public GLOBAL_WS_ParentService(RestRequest request, RestResponse response, String className, String objectExtId, Boolean addFileUrlsToJSON) {
-        super(request,response);        
-        setSobjectDetails();
+        super(request,response);
         init(className, objectExtId, addFileUrlsToJSON, 'Id');
+	setSobjectDetails();
     }    
     public GLOBAL_WS_ParentService(RestRequest request, RestResponse response, String className, String objectExtId, Boolean addFileUrlsToJSON, String apiNameOfFilesParent) {
         super(request,response);        
-        setSobjectDetails();
         init(className, objectExtId, addFileUrlsToJSON, apiNameOfFilesParent);
+	setSobjectDetails();
     }
     
     public void init(String className, String objectExtId, Boolean addFileUrlsToJSON, String apiNameOfFilesParent){
